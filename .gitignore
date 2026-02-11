@@ -1,0 +1,14 @@
+# Local env files
+.env
+.env.*
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Learnings (choose one strategy)
+# Option A (team/shared): track learnings in git -> leave enabled (do NOT ignore)
+# Option B (local-only): uncomment to ignore
+# .learnings/
+

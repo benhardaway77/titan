@@ -1,0 +1,2 @@
+[console_scripts]
+titan = titan.cli:app
