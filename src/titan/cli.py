@@ -1,3 +1,4 @@
+import time
 import typer
 from rich import print
 
@@ -17,6 +18,11 @@ def run(env: str = typer.Option("paper", help="paper|live")):
 
     # Placeholder: wire pipeline
     print("Scaffold only: data -> signals -> risk -> portfolio -> broker -> report")
+
+    # Keep the container alive (worker-style). When we implement the real pipeline,
+    # this loop becomes the scheduler/event loop.
+    while True:
+        time.sleep(60)
 
 
 @app.command()
