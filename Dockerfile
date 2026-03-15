@@ -1,7 +1,7 @@
 # Titan (paper-first) Docker image
 # Build context: this titan/ folder
 
-FROM python:3.12-slim
+FROM python:3.14-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
