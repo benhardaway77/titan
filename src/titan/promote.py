@@ -5,7 +5,7 @@ from pathlib import Path
 
 from rich.console import Console
 
-from titan.checks import require_live_gate, run_unit_tests
+from titan.checks import require_live_gate, run_backtest_regression, run_unit_tests
 
 
 @dataclass
@@ -16,11 +16,12 @@ class PromotePlan:
 
 def run_promotion_checks(plan: PromotePlan) -> int:
     console = Console()
-    repo_root = Path(__file__).resolve().parents[3]
+    repo_root = Path(__file__).resolve().parents[2]
 
     checks = [
         require_live_gate(),
         run_unit_tests(repo_root),
+        run_backtest_regression(),
     ]
 
     ok_all = True

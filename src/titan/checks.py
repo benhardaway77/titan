@@ -5,6 +5,8 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
+from titan.backtest.runner import BacktestConfig, run_regression_suite
+
 
 @dataclass
 class CheckResult:
@@ -31,6 +33,16 @@ def run_unit_tests(repo_root: Path) -> CheckResult:
 
     ok, out = _run(["python3", "-m", "unittest", "discover", "-s", "tests"], cwd=repo_root)
     return CheckResult("unit_tests(unittest)", ok, out)
+
+
+def run_backtest_regression(config: BacktestConfig | None = None) -> CheckResult:
+    """Run all registered strategy backtests and return a CheckResult."""
+    report = run_regression_suite(config)
+    if not report.results:
+        # No strategies registered yet — treat as a warning, not a hard fail,
+        # so the scaffold can still promote. Change to ok=False once strategies exist.
+        return CheckResult("backtest_regression", ok=True, details="No strategies registered.")
+    return CheckResult("backtest_regression", ok=report.passed, details=report.summary)
 
 
 def require_live_gate() -> CheckResult:
