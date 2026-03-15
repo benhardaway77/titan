@@ -11,6 +11,6 @@
 
 ## Promotion
 - develop → main merges require:
-  - unit tests pass
-  - backtest regression suite pass
-  - risk governor tests pass
+ - unit tests pass
+ - backtest regression suite pass
+ - risk governor tests pass

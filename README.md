@@ -1,5 +1,4 @@
 # Titan
-
 Paper-first → Live trading system scaffold for the Titan simulation.
 
 ## Goals
@@ -30,4 +29,3 @@ titan run --env paper
 ## Environments
 - `paper`: research + paper execution only
 - `live`: requires explicit enable flag + credentials present
-

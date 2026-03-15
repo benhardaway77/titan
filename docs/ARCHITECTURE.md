@@ -1,5 +1,4 @@
 # Titan Architecture (Scaffold)
-
 Pipeline:
 1) Data ingestion (provider adapters)
 2) Feature generation (signals)
