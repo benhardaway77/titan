@@ -17,17 +17,34 @@ class RiskState:
 
 
 class RiskGovernor:
-    """Enforces global portfolio safety rules (incl. -60% hard stop)."""
+    """Enforces global portfolio safety rules (incl. -60% hard stop).
 
-    def __init__(self, max_drawdown_pct: float = 0.60, green_dd: float = 0.15, yellow_dd: float = 0.40):
+    Zones (ascending risk):
+        green    : dd < green_dd           — full risk allowed
+        yellow   : green_dd  <= dd < yellow_dd — leverage capped at 2x
+        red      : yellow_dd <= dd < red_dd    — leverage capped at 1x
+        critical : red_dd    <= dd < max_dd    — no new risk (1% before kill-switch)
+        dead     : dd >= max_dd               — kill-switch; no trading
+    """
+
+    def __init__(
+        self,
+        max_drawdown_pct: float = 0.60,
+        green_dd: float = 0.15,
+        yellow_dd: float = 0.40,
+        red_dd: float = 0.59,
+    ):
         self.max_drawdown_pct = max_drawdown_pct
         self.green_dd = green_dd
         self.yellow_dd = yellow_dd
+        self.red_dd = red_dd
 
     def zone(self, state: RiskState) -> str:
         dd = state.drawdown_pct
         if dd >= self.max_drawdown_pct:
             return "dead"
+        if dd >= self.red_dd:
+            return "critical"
         if dd >= self.yellow_dd:
             return "red"
         if dd >= self.green_dd:
@@ -35,8 +52,7 @@ class RiskGovernor:
         return "green"
 
     def allow_new_risk(self, state: RiskState) -> bool:
-        z = self.zone(state)
-        return z in ("green", "yellow")
+        return self.zone(state) in ("green", "yellow", "red")
 
     def leverage_cap(self, base_cap: float, state: RiskState) -> float:
         z = self.zone(state)
@@ -46,4 +62,5 @@ class RiskGovernor:
             return min(base_cap, 2.0)
         if z == "red":
             return 1.0
+        # critical or dead: no new leverage
         return 0.0
