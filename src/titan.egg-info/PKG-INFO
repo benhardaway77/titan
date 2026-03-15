@@ -9,5 +9,10 @@ Requires-Dist: pandas>=2.2
 Requires-Dist: numpy>=1.26
 Requires-Dist: rich>=13.7
 Requires-Dist: typer>=0.12
+Requires-Dist: alpaca-py>=0.26
+Requires-Dist: py-clob-client>=0.7
+Requires-Dist: requests>=2.31
 Provides-Extra: dev
 Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: ruff>=0.4; extra == "dev"
+Requires-Dist: mypy>=1.10; extra == "dev"
