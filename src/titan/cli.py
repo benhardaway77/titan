@@ -1,4 +1,5 @@
-import time
+import logging
+
 import typer
 from rich import print
 
@@ -11,18 +12,24 @@ app = typer.Typer(no_args_is_help=True)
 @app.command()
 def run(env: str = typer.Option("paper", help="paper|live")):
     """Run Titan in paper or live mode (live is gated)."""
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    )
+
     settings = Settings.load(env)
     print(f"[bold]Titan[/bold] starting in env=[cyan]{settings.env}[/cyan]")
+
     if settings.env == "live" and not settings.live.enable_live:
         raise typer.BadParameter("Live env selected but enable_live=false. Refusing to run.")
 
-    # Placeholder: wire pipeline
-    print("Scaffold only: data -> signals -> risk -> portfolio -> broker -> report")
+    # Deferred import: keeps `titan promote` fast (never instantiates agents)
+    from titan.agent import run_agents
 
-    # Keep the container alive (worker-style). When we implement the real pipeline,
-    # this loop becomes the scheduler/event loop.
-    while True:
-        time.sleep(60)
+    try:
+        run_agents(settings)
+    except KeyboardInterrupt:
+        print("\n[bold yellow]Titan stopped.[/bold yellow]")
 
 
 @app.command()
